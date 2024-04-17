@@ -19,10 +19,11 @@ import {
   LOGIN_URL,
   MOBILE_REDIRECT,
 } from 'src/constants';
-import { AccessCore, Permission } from 'src/cores/access.core';
+import { AccessCore, AccessPermission } from 'src/cores/access.core';
 import { SystemConfigCore } from 'src/cores/system-config.core';
 import { UserCore } from 'src/cores/user.core';
 import {
+  ALL_PERMISSIONS,
   AuthDeviceResponseDto,
   AuthDto,
   ChangePasswordDto,
@@ -32,7 +33,9 @@ import {
   OAuthAuthorizeResponseDto,
   OAuthCallbackDto,
   OAuthConfigDto,
+  Permission,
   SignUpDto,
+  USER_PERMISSIONS,
   mapLoginResponse,
   mapUserToken,
 } from 'src/dtos/auth.dto';
@@ -157,6 +160,7 @@ export class AuthService {
       name: dto.name,
       password: dto.password,
       storageLabel: 'admin',
+      permissions: ALL_PERMISSIONS,
     });
 
     return mapUser(admin);
@@ -191,7 +195,7 @@ export class AuthService {
   }
 
   async logoutDevice(auth: AuthDto, id: string): Promise<void> {
-    await this.access.requirePermission(auth, Permission.AUTH_DEVICE_DELETE, id);
+    await this.access.requirePermission(auth, AccessPermission.AUTH_DEVICE_DELETE, id);
     await this.userTokenRepository.delete(id);
   }
 
@@ -274,6 +278,7 @@ export class AuthService {
         oauthId: profile.sub,
         quotaSizeInBytes: storageQuota * HumanReadableSize.GiB || null,
         storageLabel: storageLabel || null,
+        permissions: USER_PERMISSIONS,
       });
     }
 

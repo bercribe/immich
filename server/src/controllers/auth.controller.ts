@@ -9,21 +9,20 @@ import {
   LoginCredentialDto,
   LoginResponseDto,
   LogoutResponseDto,
+  Permission,
   SignUpDto,
   ValidateAccessTokenResponseDto,
 } from 'src/dtos/auth.dto';
 import { UserResponseDto, mapUser } from 'src/dtos/user.dto';
-import { Auth, Authenticated, GetLoginDetails, PublicRoute } from 'src/middleware/auth.guard';
+import { Auth, Authenticated, GetLoginDetails } from 'src/middleware/auth.guard';
 import { AuthService, LoginDetails } from 'src/services/auth.service';
 import { UUIDParamDto } from 'src/validation';
 
 @ApiTags('Authentication')
 @Controller('auth')
-@Authenticated()
 export class AuthController {
   constructor(private service: AuthService) {}
 
-  @PublicRoute()
   @Post('login')
   async login(
     @Body() loginCredential: LoginCredentialDto,
@@ -35,42 +34,47 @@ export class AuthController {
     return response;
   }
 
-  @PublicRoute()
   @Post('admin-sign-up')
   signUpAdmin(@Body() dto: SignUpDto): Promise<UserResponseDto> {
     return this.service.adminSignUp(dto);
   }
 
   @Get('devices')
+  @Authenticated(Permission.AUTH_DEVICE_READ)
   getAuthDevices(@Auth() auth: AuthDto): Promise<AuthDeviceResponseDto[]> {
     return this.service.getDevices(auth);
   }
 
   @Delete('devices')
+  @Authenticated(Permission.AUTH_DEVICE_DELETE)
   @HttpCode(HttpStatus.NO_CONTENT)
   logoutAuthDevices(@Auth() auth: AuthDto): Promise<void> {
     return this.service.logoutDevices(auth);
   }
 
   @Delete('devices/:id')
+  @Authenticated(Permission.AUTH_DEVICE_DELETE)
   @HttpCode(HttpStatus.NO_CONTENT)
   logoutAuthDevice(@Auth() auth: AuthDto, @Param() { id }: UUIDParamDto): Promise<void> {
     return this.service.logoutDevice(auth, id);
   }
 
   @Post('validateToken')
+  @Authenticated(Permission.AUTH_DEVICE_READ)
   @HttpCode(HttpStatus.OK)
   validateAccessToken(): ValidateAccessTokenResponseDto {
     return { authStatus: true };
   }
 
   @Post('change-password')
+  @Authenticated(Permission.AUTH_CHANGE_PASSWORD)
   @HttpCode(HttpStatus.OK)
   changePassword(@Auth() auth: AuthDto, @Body() dto: ChangePasswordDto): Promise<UserResponseDto> {
     return this.service.changePassword(auth, dto).then(mapUser);
   }
 
   @Post('logout')
+  @Authenticated(Permission.AUTH_DEVICE_DELETE)
   @HttpCode(HttpStatus.OK)
   logout(
     @Req() request: Request,

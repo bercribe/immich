@@ -18,7 +18,6 @@ import {
   serverVersion,
 } from 'src/constants';
 import { ILoggerRepository } from 'src/interfaces/logger.interface';
-import { Metadata } from 'src/middleware/auth.guard';
 
 export const isConnectionAborted = (error: Error | any) => error.code === 'ECONNABORTED';
 
@@ -106,10 +105,6 @@ const patchOpenAPI = (document: OpenAPIObject) => {
     for (const operation of Object.values(operations)) {
       if (!operation) {
         continue;
-      }
-
-      if ((operation.security || []).some((item) => !!item[Metadata.PUBLIC_SECURITY])) {
-        delete operation.security;
       }
 
       if (operation.summary === '') {
