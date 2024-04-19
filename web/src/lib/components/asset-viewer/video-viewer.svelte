@@ -29,11 +29,7 @@
   };
 </script>
 
-<div
-  transition:fade={{ duration: 150 }}
-  class="flex select-none place-content-center place-items-center"
-  style="height: calc(100% - 64px)"
->
+<div transition:fade={{ duration: 150 }} class="relative h-full select-none">
   <video
     bind:this={element}
     autoplay
@@ -50,7 +46,7 @@
   </video>
 
   {#if isVideoLoading}
-    <div class="absolute flex place-content-center place-items-center">
+    <div class="flex h-full items-center justify-center">
       <LoadingSpinner />
     </div>
   {/if}
