@@ -162,7 +162,7 @@
         <img
           src={assetData}
           alt={getAltText(asset)}
-          class="absolute top-0 left-0 -z-10 object-cover h-full w-full blur-sm"
+          class="absolute top-0 left-0 -z-10 object-cover h-full w-full blur-lg"
           draggable="false"
         />
       {/if}

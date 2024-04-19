@@ -8,6 +8,7 @@
   import LoadingSpinner from '../shared-components/loading-spinner.svelte';
 
   export let assetId: string;
+  export let hasStacked: boolean;
 
   let element: HTMLVideoElement | undefined = undefined;
   let isVideoLoading = true;
@@ -29,13 +30,13 @@
   };
 </script>
 
-<div transition:fade={{ duration: 150 }} class="relative h-full select-none">
+<div transition:fade={{ duration: 150 }} class="flex h-full select-none place-content-center place-items-center">
   <video
     bind:this={element}
     autoplay
     playsinline
     controls
-    class="h-full object-contain"
+    class="h-full object-contain {hasStacked ? 'mb-[136px]' : ''}"
     on:canplay={handleCanPlay}
     on:ended={() => dispatch('onVideoEnded')}
     bind:volume={$videoViewerVolume}

@@ -603,6 +603,7 @@
             />
           {:else}
             <VideoViewer
+              hasStacked={$stackAssetsStore.length > 0}
               assetId={previewStackedAsset.id}
               on:close={closeViewer}
               on:onVideoEnded={() => navigateAsset()}
@@ -623,6 +624,7 @@
           {:else if asset.type === AssetTypeEnum.Image}
             {#if shouldPlayMotionPhoto && asset.livePhotoVideoId}
               <VideoViewer
+                hasStacked={$stackAssetsStore.length > 0}
                 assetId={asset.livePhotoVideoId}
                 on:close={closeViewer}
                 on:onVideoEnded={() => (shouldPlayMotionPhoto = false)}
@@ -636,6 +638,7 @@
             {/if}
           {:else}
             <VideoViewer
+              hasStacked={$stackAssetsStore.length > 0}
               assetId={asset.id}
               on:close={closeViewer}
               on:onVideoEnded={() => navigateAsset()}
